@@ -1,4 +1,5 @@
 module.exports = {
+  base: '/palette',
   themeConfig: {
     logo: '/logo.png',
     nav: [

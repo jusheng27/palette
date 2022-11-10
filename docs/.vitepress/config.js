@@ -5,14 +5,20 @@ const readFile = require(path.join(__dirname, '/utils') + '/readFile');
 module.exports = {
   base: '/palette/',
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }]
+    ['link', { rel: 'icon', href: '/public/favicon.ico' }]
   ],
   title: 'palette',
+  lastUpdated: true,
+  markdown: {
+    theme: 'material-palenight',
+    lineNumbers: true
+  },
   themeConfig: {
-    logo: '/logo.png',
+    logo: '/favicon.ico',
     docsDir: 'docs',
     displayAllHeaders: false,
     smoothScroll: true,
+    lastUpdatedText: '最近更新时间',
 
     nav: [
       { text: '日常', link: '/daily/' },
@@ -32,12 +38,12 @@ module.exports = {
     ],
 
     sidebar: {
-      '/efficiency/': [{
-        title: '开发提效系列',
+      '/efficiency': [{
+        text: '开发提效系列',
         collapsable: false,
-        children: readFile(docsRoot + '/efficiency')
+        items: readFile('/efficiency')
       }],
-      '/element-plus/': readFile(docsRoot + '/element-plus')
+      '/element-plus/': readFile('/element-plus')
     },
   }
 }

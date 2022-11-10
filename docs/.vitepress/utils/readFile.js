@@ -1,10 +1,11 @@
 const fs = require('fs') // 文件模块
 const path = require('path') // 路径模块
-const docsRoot = path.join(__dirname, '..', '..', 'docs') // docs文件路径
-const chalk = require('chalk') // 命令行打印美化
+const docsRoot = path.join(__dirname, '..', '..') // docs文件路径
 const log = console.log
 
-function ReadFile(dir = docsRoot, filesList = [], fpath = '') {
+function ReadFile(linkBase, filesList = [], fpath = '') {
+  const dir = path.join(docsRoot + linkBase)
+
   let files = fs.readdirSync(dir)
   // 10 1排序错误
   if(Array.isArray(files)){
@@ -20,21 +21,21 @@ function ReadFile(dir = docsRoot, filesList = [], fpath = '') {
     // log('isDirectory-------------------', stat.isDirectory(), item)
     // isDirectory 返回是否文件夹, 4.file.md dir:/Users/xx/reg-rules-js-site/docs/regular
     const fileNameArr = path.basename(filePath).split('.')
-    if (stat.isDirectory() && item !== '.vuepress') {
+    if (stat.isDirectory() && item !== '.vitepress') {
       // 生成目录名
       let title = fileNameArr.length > 1 ? fileNameArr[1] : fileNameArr[0]
       if(!title){
-        log(chalk.yellow(`warning: 该文件夹 "${filePath}" 没有按照约定命名，将忽略生成相应数据。`))
+        log(`warning: 该文件夹 "${filePath}" 没有按照约定命名，将忽略生成相应数据。`)
         return
       }
       filesList.push({
-        title,
+        text: title,
         collapsable: false,
-        children: [],
+        items: [],
       })
       // log('递归读取文件夹的文件', path.join(dir, item), filesList[index].children, item)
       // 递归读取文件夹的文件 /Users/another/Documents/self-study/reg-rules-js-site/docs/test/test2 [] test2
-      ReadFile(path.join(dir, item), filesList[index].children, item)
+      ReadFile(path.join(linkBase, item), filesList[index].items, item)
     } else {
       // 生成文件名数组
       let name = null
@@ -46,18 +47,18 @@ function ReadFile(dir = docsRoot, filesList = [], fpath = '') {
       if (fileNameArr.length > 1) {
         cloneArr.pop()
         name = cloneArr.join('.')
-        pathName = fpath ? `${fpath}/${name}` : name
+        pathName = name
         title = cloneArr.length > 1 ? cloneArr[1] : cloneArr[0]
       } else {
-        log(chalk.yellow(`warning: 该文件 "${filePath}" 没有按照约定命名，将忽略生成相应数据。`))
+        log(`warning: 该文件 "${filePath}" 没有按照约定命名，将忽略生成相应数据。`)
         return
       }
 
-      log('name', name, pathName, typeFile, title)
+      console.log(linkBase, pathName)
       // 过滤非md文件
       if (typeFile === 'md') {
-        if(name === 'README') return filesList.unshift('')
-        filesList.push([pathName, title])
+        if(name === 'index') return filesList.unshift('')
+        filesList.push({text: title, link: linkBase + '/' + pathName})
       }
     }
   })

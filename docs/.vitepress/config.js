@@ -5,7 +5,7 @@ const readFile = require(path.join(__dirname, '/utils') + '/readFile');
 module.exports = {
   base: '/palette/',
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }]
+    ['link', { rel: 'icon', href: 'https://jusheng27.github.io/palette/favicon.ico' }]
   ],
   title: 'palette',
   lastUpdated: true,
